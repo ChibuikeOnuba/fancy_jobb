@@ -33,31 +33,26 @@ def update_cron_with_random_times():
     # Generate random times for the day
     num_times = random.randint(2, 10)
     times = set()
-    
+
     while len(times) < num_times:
         hour = random.randint(0, 23)
         minute = random.randint(0, 59)
         times.add((hour, minute))
-    
-    # Define cron jobs
-    cron_file = "/tmp/current_cron"
-    os.system(f"crontab -l > {cron_file} 2>/dev/null || true")
-    
-    with open(cron_file, "r") as file:
-        lines = file.readlines()
-    
-    with open(cron_file, "w") as file:
-        for line in lines:
-            if "update_number.py" not in line:
-                file.write(line)
-        
+
+    # Path to the batch file
+    bat_file_path = os.path.join(script_dir, "update_number_tasks.bat")
+
+    # Write commands to the batch file
+    with open(bat_file_path, "w") as bat_file:
         for hour, minute in sorted(times):
-            cron_command = f"{minute} {hour} * * * cd {script_dir} && python3 {os.path.join(script_dir, 'update_number.py')}\n"
-            file.write(cron_command)
-    
-    os.system(f"crontab {cron_file}")
-    os.remove(cron_file)
-    print(f"Cron jobs updated to run {num_times} times today at the following times: {sorted(times)}")
+            time_string = f"{hour:02d}:{minute:02d}"
+            command = (
+                f'schtasks /create /tn "UpdateNumber_{hour}_{minute}" '
+                f'/tr "{os.path.join(script_dir, "update_number.py")}" /sc ONCE /st {time_string}\n'
+            )
+            bat_file.write(command)
+
+    print(f"Task Scheduler commands written to {bat_file_path}. Run this file to schedule tasks.")
 
 def main():
     try:
