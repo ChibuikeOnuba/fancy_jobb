@@ -29,7 +29,7 @@ def git_push():
         print("Error pushing to GitHub:")
         print(result.stderr)
 
-def update_cron_with_random_times():
+def update_scheduler_with_random_times():
     # Generate random times for the day
     num_times = random.randint(2, 10)
     times = set()
@@ -63,7 +63,7 @@ def main():
         git_commit()
         git_push()
 
-        update_cron_with_random_times()
+        update_scheduler_with_random_times()
 
     except Exception as e:
         print(f"Error: {str(e)}")
