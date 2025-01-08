@@ -45,7 +45,7 @@ def update_scheduler_with_random_times():
         return
 
     # Generate random times for the day
-    num_times = random.randint(2, 10)
+    num_times = random.randint(0, 10)
     times = set()
 
     while len(times) < num_times:
