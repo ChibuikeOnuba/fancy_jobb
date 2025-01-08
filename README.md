@@ -25,6 +25,10 @@ Run the .bat file to create a schedule for the scripts to run automatically at t
 .\update_number_tasks.bat
 ```
 
+To confirm the batch file successfully ran, a success message will display on your terminal.
+You can also open the Task Scheduler on your windows computer to confirm, you should see the task like this
+
+![Scheduler](schedule.png)
 ## Usage
 
 The script will increment the number in `number.txt` and commit the change to git n times a day. n is a random number between 0 and 10. 
