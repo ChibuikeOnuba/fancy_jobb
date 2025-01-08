@@ -19,10 +19,10 @@ python update_number.py
 
 To confirm the script successfully ran, a .bat file named `update_number_tasks.bat` is created.
 
-Run the .bat file to create a schedule for the scripts to run automatically
+Run the .bat file to create a schedule for the scripts to run automatically at the chosen times
 
 ```bash
-update_number_tasks.bat
+.\update_number_tasks.bat
 ```
 
 ## Usage
