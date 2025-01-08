@@ -17,7 +17,7 @@ def write_number(num):
 
 def git_commit():
     subprocess.run(['git', 'add', 'number.txt'])
-    date = datetime.now().strftime('%Y-%m-%d')
+    date = datetime.now().strftime('%Y-%m-%d') 
     commit_message = f"Update number: {date}"
     subprocess.run(['git', 'commit', '-m', commit_message])
 
