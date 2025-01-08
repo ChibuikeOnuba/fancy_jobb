@@ -28,8 +28,22 @@ def git_push():
     else:
         print("Error pushing to GitHub:")
         print(result.stderr)
+        
+        
+def tasks_already_scheduled_for_today():
+    # Get today's date in YYYY_MM_DD format
+    today = datetime.now().strftime("%Y_%m_%d")
+
+    # Check if tasks are already sceduled for the day, from the date in the task name
+    result = subprocess.run(["schtasks", "/query", "/fo", "LIST"], capture_output=True, text=True)
+    return today in result.stdout
 
 def update_scheduler_with_random_times():
+    # Check if tasks for today are already scheduled
+    if tasks_already_scheduled_for_today():
+        print("Tasks for today are already scheduled. Skipping task creation.")
+        return
+
     # Generate random times for the day
     num_times = random.randint(2, 10)
     times = set()
@@ -42,13 +56,17 @@ def update_scheduler_with_random_times():
     # Path to the batch file
     bat_file_path = os.path.join(script_dir, "update_number_tasks.bat")
 
+    # Today's date for unique task names
+    today = datetime.now().strftime("%Y_%m_%d")
+
     # Write commands to the batch file
     with open(bat_file_path, "w") as bat_file:
         for hour, minute in sorted(times):
             time_string = f"{hour:02d}:{minute:02d}"
+            task_name = f"UpdateNumber_{today}_{hour}_{minute}"
             command = (
-                f'schtasks /create /tn "UpdateNumber_{hour}_{minute}" '
-                f'/tr "{os.path.join(script_dir, "update_number.py")}" /sc ONCE /st {time_string}\n'
+                f'schtasks /create /tn "{task_name}" '
+                f'/tr "python {os.path.join(script_dir, "update_number.py")}" /sc ONCE /st {time_string}\n'
             )
             bat_file.write(command)
 
